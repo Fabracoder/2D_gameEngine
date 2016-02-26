@@ -10,6 +10,7 @@
 #include<string.h>
 #include<assert.h>
 #include"DrawUtils.h" 
+#include "Main.h"
 
 /* Set this to true to force the game to exit */
 char shouldExit = 0;
@@ -27,7 +28,16 @@ int spriteBallPos[2] = { -100, -100 };
 /* Texture for the sprite */
 GLuint spriteTex;
 GLuint spriteTex2;
-GLuint spriteTexFireBall;
+GLuint spriteTexFireBall; 
+GLuint textureArr[64];
+
+/* World */
+//int worldWidth = 400;
+//int worldHeight = 400;
+int world[400][400];
+
+bool isFacingRight = true;
+bool isFacingRightBall = true;
 
 /* size of the sprite */
 int spriteSize[2];
@@ -39,12 +49,13 @@ int main(void)
         fprintf(stderr, "Could not initialize SDL. ErrorCode=%s\n", SDL_GetError());
         return 1;
     }
+	 
 
     /* Create the window, OpenGL context */
     SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_Window* window = SDL_CreateWindow(
-            "HW 1 for Oliver Seet",
+            "HW 2 for Oliver Seet",
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
             640, 480,
             SDL_WINDOW_OPENGL);
@@ -81,15 +92,15 @@ int main(void)
 
     /* Load the texture */
 
-	ResourceLoader rl;
+	loadTextures(&textureArr);
 
-    spriteTex = glTexImageTGAFile("Mega-Man-transparent.tga", &spriteSize[0], &spriteSize[1]);
-	spriteTex2 = glTexImageTGAFile("Mega-Man-transparentR.tga", &spriteSize[0], &spriteSize[1]);
-	spriteTexFireBall = glTexImageTGAFile("fireball.tga", &spriteSize[0], &spriteSize[1]);
+    
+
+
+
 	kbState = SDL_GetKeyboardState(NULL);
 
-	bool isFacingRight = true;
-	bool isFacingRightBall = true;
+
     /* The game loop */
     while (!shouldExit) {
         assert(glGetError() == GL_NO_ERROR);
@@ -105,70 +116,28 @@ int main(void)
         }
  			
         /* Game logic */
-        if (kbState[SDL_SCANCODE_ESCAPE]) {
-            shouldExit = 1;
-        }
-        
-        if (kbState[SDL_SCANCODE_LEFT]) {
-			if(spritePos[0]>0)
-			{
-				isFacingRight = false;
-				spritePos[0] -= 1;
 
-			} 
-            
-        }
-        if (kbState[SDL_SCANCODE_RIGHT]) {
-			if (spritePos[0] < 610)
-			{
-				isFacingRight = true;
-				spritePos[0] += 1;
-			}
-        }
-        if (kbState[SDL_SCANCODE_UP]) {
-			if (spritePos[1] > 0)
-			{
-				spritePos[1] -= 1;
-			}
-        }
-		if (kbState[SDL_SCANCODE_DOWN]) {
-			if (spritePos[1] < 430)
-			{
-				spritePos[1] += 1;
-			}
-		}
-		if (kbState[SDL_SCANCODE_SPACE])
-		{
-			isFacingRightBall = isFacingRight;
+		gameLogic();
 
-			spriteBallPos[0] = spritePos[0];
-			spriteBallPos[1] = spritePos[1]; 
-			
-		}
+   
 
-		if (isFacingRightBall)
-		{
-			spriteBallPos[0]++;
-		}
-		else
-		{
-			spriteBallPos[0]--;
-		}
+
+		drawGL_Stuff();
 
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);
 
 			
-		glDrawSprite(spriteTexFireBall, spritePos[2], spritePos[3], spriteSize[0], spriteSize[1]);
-
-		
+		glDrawSprite(textureArr[0], spritePos[2], spritePos[3], spriteSize[0], spriteSize[1]);
+		 
+ 
 		if(isFacingRight)
 			{
-				glDrawSprite(spriteTex, spritePos[0], spritePos[1], spriteSize[0], spriteSize[1]);
+				glDrawSprite(textureArr[1], spritePos[0], spritePos[1], spriteSize[0], spriteSize[1]);
 			}
 			else
 			{
-				glDrawSprite(spriteTex2, spritePos[0], spritePos[1], spriteSize[0], spriteSize[1]);
+				glDrawSprite(textureArr[2], spritePos[0], spritePos[1], spriteSize[0], spriteSize[1]);
 			}
 			
         /* Present to the player */
@@ -179,3 +148,90 @@ int main(void)
 
     return 0;
 }
+ 
+bool drawGL_Stuff()
+{
+//	drawBackground(&world, camera.getX(), camera.getY(), camera.getW(), camera.getH());
+//	drawSprites();
+
+	return false;
+}
+
+bool drawBackground(int * world, int x, int y, int w, int h)
+{ 
+	return false;
+}
+
+
+
+bool drawSprites(int * localSprites)
+{
+	return false;
+}
+
+void gameLogic()
+{
+	if (kbState[SDL_SCANCODE_ESCAPE]) {
+		shouldExit = 1;
+	}
+
+	if (kbState[SDL_SCANCODE_LEFT]) {
+		if (spritePos[0]>0)
+		{
+			isFacingRight = false;
+			spritePos[0] -= 1;
+
+		}
+
+	}
+	if (kbState[SDL_SCANCODE_RIGHT]) {
+		if (spritePos[0] < 610)
+		{
+			isFacingRight = true;
+			spritePos[0] += 1;
+		}
+	}
+	if (kbState[SDL_SCANCODE_UP]) {
+		if (spritePos[1] > 0)
+		{
+			spritePos[1] -= 1;
+		}
+	}
+	if (kbState[SDL_SCANCODE_DOWN]) {
+		if (spritePos[1] < 430)
+		{
+			spritePos[1] += 1;
+		}
+	}
+	if (kbState[SDL_SCANCODE_SPACE])
+	{
+		isFacingRightBall = isFacingRight;
+
+		spriteBallPos[0] = spritePos[0];
+		spriteBallPos[1] = spritePos[1];
+
+	}
+
+	if (isFacingRightBall)
+	{
+		spriteBallPos[0]++;
+	}
+	else
+	{
+		spriteBallPos[0]--;
+	}
+}
+
+void drawTileSeg(char filename[], int locX, int locY, double segX, double segY)
+{
+}
+
+
+void loadTextures(GLuint *arr)
+{
+	arr[0] = glTexImageTGAFile("fireball.tga", &spriteSize[0], &spriteSize[1]);
+	arr[1] = glTexImageTGAFile("Mega-Man-transparent.tga", &spriteSize[0], &spriteSize[1]);
+	arr[2] = glTexImageTGAFile("Mega-Man-transparentR.tga", &spriteSize[0], &spriteSize[1]);
+	
+}
+ 
