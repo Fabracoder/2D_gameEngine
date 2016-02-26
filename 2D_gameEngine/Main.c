@@ -9,8 +9,9 @@
 #include<stdio.h>
 #include<string.h>
 #include<assert.h>
-#include"DrawUtils.h" 
-#include "Main.h"
+
+#include"DrawUtils.h"  
+#include "Main.h" 
 
 /* Set this to true to force the game to exit */
 char shouldExit = 0;
@@ -93,11 +94,7 @@ int main(void)
     /* Load the texture */
 
 	loadTextures(&textureArr);
-
-    
-
-
-
+	  
 	kbState = SDL_GetKeyboardState(NULL);
 
 
@@ -161,9 +158,7 @@ bool drawBackground(int * world, int x, int y, int w, int h)
 { 
 	return false;
 }
-
-
-
+  
 bool drawSprites(int * localSprites)
 {
 	return false;
