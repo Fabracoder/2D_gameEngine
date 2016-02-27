@@ -27,10 +27,9 @@ int spritePos[2] = { 10, 10 };
 int spriteBallPos[2] = { -100, -100 };
 
 /* Texture for the sprite */
-GLuint spriteTex;
-GLuint spriteTex2;
-GLuint spriteTexFireBall; 
+ 
 GLuint textureArr[64];
+GLuint textureBG_Arr[64];
 
 /* World */
 //int worldWidth = 400;
@@ -94,10 +93,9 @@ int main(void)
     /* Load the texture */
 
 	loadTextures(&textureArr);
-	  
+	loadBG_Textures(&textureBG_Arr);
 	kbState = SDL_GetKeyboardState(NULL);
-
-
+	 
     /* The game loop */
     while (!shouldExit) {
         assert(glGetError() == GL_NO_ERROR);
@@ -115,28 +113,10 @@ int main(void)
         /* Game logic */
 
 		gameLogic();
-
-   
-
-
+		printf("Game Logic Running");
+     
 		drawGL_Stuff();
 
-        glClearColor(0, 0, 0, 1);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-			
-		glDrawSprite(textureArr[0], spritePos[2], spritePos[3], spriteSize[0], spriteSize[1]);
-		 
- 
-		if(isFacingRight)
-			{
-				glDrawSprite(textureArr[1], spritePos[0], spritePos[1], spriteSize[0], spriteSize[1]);
-			}
-			else
-			{
-				glDrawSprite(textureArr[2], spritePos[0], spritePos[1], spriteSize[0], spriteSize[1]);
-			}
-			
         /* Present to the player */
         SDL_GL_SwapWindow(window);
     }
@@ -148,20 +128,46 @@ int main(void)
  
 bool drawGL_Stuff()
 {
-//	drawBackground(&world, camera.getX(), camera.getY(), camera.getW(), camera.getH());
-//	drawSprites();
+
+
+	glClearColor(0, 0, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+
+	//	drawBackground(&world, camera.getX(), camera.getY(), camera.getW(), camera.getH());
+	 	drawSprites(3);
+
+	
 
 	return false;
 }
 
 bool drawBackground(int * world, int x, int y, int w, int h)
 { 
+
+	glDrawSprite(textureBG_Arr[0], spritePos[2], spritePos[3], spriteSize[0], spriteSize[1]);
+
 	return false;
 }
   
 bool drawSprites(int * localSprites)
 {
-	return false;
+
+	// fireball
+		glDrawSprite(textureArr[0], spritePos[2], spritePos[3], spriteSize[0], spriteSize[1]);
+	 
+	// megaman
+		if (isFacingRight) 
+		{
+			glDrawSprite(textureArr[1], spritePos[0], spritePos[1], spriteSize[0], spriteSize[1]);
+		}
+		else
+		{
+			glDrawSprite(textureArr[2], spritePos[0], spritePos[1], spriteSize[0], spriteSize[1]);
+		}
+
+
+	return true;
 }
 
 void gameLogic()
@@ -217,8 +223,21 @@ void gameLogic()
 	}
 }
 
-void drawTileSeg(char filename[], int locX, int locY, double segX, double segY)
+void loadBG_Textures(int * BGtextures[64])
 {
+//	BGtextures[0] = glTexImageTGAFile("GreenTile_3x3Expanded.tga", 96, 96);
+//	BGtextures[1] = glTexImageTGAFile("DarkTile_3x3Expanded.tga", 96, 96);
+//	BGtextures[2] = glTexImageTGAFile("Mega-Man-transparentR.tga", 96, 96);
+}
+
+ 
+
+void drawTileSeg(int tileNumber, int locX, int locY, double segX, double segY)
+{
+
+//	glDrawSprite2(textureBG_Arr[0], 100, 50, 32, 32, 0, 0, 3.0);
+
+
 }
 
 

@@ -106,3 +106,24 @@ void glDrawSprite(GLuint tex, int x, int y, int w, int h)
     }
     glEnd();
 }
+/* Draw the sprite */
+void glDrawSprite2(GLuint tex, int x, int y, int w, int h,int locX, int locY,double size)
+{
+	double c = locX / size;
+	double d = locY / size;
+	double a = 1 / size;
+	glBindTexture(GL_TEXTURE_2D, tex);
+	glBegin(GL_QUADS);
+	{
+		glColor3ub(255, 255, 255);
+		glTexCoord2f(c, d + a);
+		glVertex2i(x, y);
+		glTexCoord2f(c + a, d + a);
+		glVertex2i(x + w, y);
+		glTexCoord2f(c + a, d);
+		glVertex2i(x + w, y + h);
+		glTexCoord2f(c, d);
+		glVertex2i(x, y + h);
+	}
+	glEnd();
+}
